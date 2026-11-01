@@ -185,7 +185,7 @@ const Login = () => {
             <div className="hidden lg:block">
                <div className="relative overflow-hidden rounded-[2rem]">
                   <img
-                     src="../../images/loginimage.jpg"
+                     src="../../images/loginimage.jpeg"
                      alt="Fresh produce at a market"
                      className="h-[620px] w-full object-cover"
                   />
