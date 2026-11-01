@@ -41,11 +41,11 @@ const Profile = () => {
 
    const [errMsg, setErrMsg] = useState({});
    //update profile
-   const [updateProfileFormData, setupdateProfileFormData] = useState({
-      name: "",
-      mobile: "",
-      gender: ""
-   });
+   // const [updateProfileFormData, setupdateProfileFormData] = useState({
+   //    name: "",
+   //    mobile: "",
+   //    gender: ""
+   // });
 
    useEffect(() => {
       if (user) {
