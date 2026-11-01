@@ -4,7 +4,9 @@ import {auth} from "../config/firebase";
 import { signOut } from 'firebase/auth';
 import { useUser } from "../context/UserContext";
 import { useCart } from "../context/CartContext";
+import axios from "axios";
 
+const API = import.meta.env.VITE_API_URL;
 
 const Header = () => {
    const userData = useUser();
@@ -13,9 +15,14 @@ const Header = () => {
    const [showProfile, setShowProfile] = useState(false);
    const [showMobileNav, setshowMobileNav] = useState(false);
    const { cartItems } = useCart();
+   const [categories, setCategories] = useState([]);
    //console.log(userData)
    const navigate = useNavigate();
   
+   async function getCategories() {
+      const catresponse = await axios.get(`${API}/api/categories`);
+      setCategories(catresponse.data.data || []);
+   }
    useEffect(() => {
       auth.onAuthStateChanged((user) => {
          if (!user) {
@@ -24,6 +31,7 @@ const Header = () => {
             console.log('User logged in...', userData?.user?.firebaseUid);
          }
       })
+      getCategories()
    }, [user]);
 
 
@@ -52,9 +60,9 @@ const Header = () => {
             <nav className="hidden items-center gap-7 text-xs md:flex">
                <Link to="/" className="font-medium text-forest hover:text-forest">Home</Link>
                <Link to="/shop" className="font-medium text-forest hover:text-forest">Shop</Link>
-               <Link to="/category/6ae22493b579934635f7615a" className="font-medium text-forest hover:text-forest">Rice</Link>
-               <Link to="/category/6ae2257ab579934635f7615b" className="font-medium text-forest hover:text-forest">Pulses</Link>
-               <Link to="/category/6ae3176f63ee630e5377c561" className="font-medium text-forest hover:text-forest">Millets</Link>
+               {categories.slice(0,3).map((cat) => {
+                  return(<Link to={`/category/${cat._id}`} className="font-medium text-forest hover:text-forest">{cat.name}</Link>)
+               })}
                <Link to="/about" className="font-medium text-forest hover:text-forest">About</Link>
                <Link to="/contact" className="font-medium text-forest hover:text-forest">Contact</Link>
 
@@ -150,7 +158,7 @@ const Header = () => {
                )}
                <Link to='/cart' className="relative" >
                   <i className="fa-solid fa-basket-shopping"></i>
-                  <span className="absolute -right-2 -top-2 grid h-4 w-4 place-items-center rounded-full bg-forest text-[9px] text-white" >{cartItems.length}</span>
+                  <span className="absolute -right-2 -top-2 grid h-4 w-4 place-items-center rounded-full bg-forest text-[9px] text-white" >{cartItems?.length}</span>
                </Link>
             </div>
             <div className="mobileNav md:hidden relative cursor-pointer">
