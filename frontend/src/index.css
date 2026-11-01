@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@theme {
+  --color-forest: #174b32;
+  --color-leaf: #286642;
+  --color-cream: #fbf8ef;
+  --color-sage: #eaf1df;
+  --color-ink: #142d25;
+  --color-sand: #f4efdf;
+
+  --font-sans: "Poppins", sans-serif;
+  --font-serif: "Lora", serif;
+
+  --shadow-soft: 0 5px 18px rgba(26, 58, 39, 0.08);
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+#root {
+  overflow-x: clip;
+}
