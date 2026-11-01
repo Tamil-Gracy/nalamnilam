@@ -245,7 +245,7 @@ const Home = () => {
                <div
                   className="min-h-[280px] bg-cover bg-center sm:min-h-[360px]"
                   style={{
-                     backgroundImage: "url('/images/millet-banner.jpg')",
+                     backgroundImage: "url('/images/shop-banner.jpeg')",
                   }}
                   role="img"
                   aria-label="Millets and natural food essentials"

@@ -257,7 +257,7 @@ const Shop = () => {
             </div>
 
             <img
-               src="../../public/images/shop-banner.jpeg"
+               src="../../images/signupimage.jpeg"
                alt="Organic farm products"
                className="mt-7 h-40 w-full rounded-2xl object-cover sm:h-48 md:absolute md:right-8 md:top-8 md:mt-0 md:h-[calc(100%-4rem)] md:w-[34%]"
             />
