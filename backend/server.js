@@ -19,15 +19,28 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// ==================================================
+// MIDDLEWARE
+// ==================================================
+
 app.use(cors());
 app.use(express.json());
+
+// Disable caching only for API responses
+app.use("/api", (req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+});
 
 app.use("/uploads", express.static(path.resolve("uploads")));
 
 const categoryUpload = createUpload("categories");
 const productUpload = createUpload("products");
 
-// Delete a file if it exists
+// ==================================================
+// FILE DELETE HELPERS
+// ==================================================
+
 const deleteFile = (filePath) => {
   if (filePath) {
     fs.unlink(filePath, (err) => {
@@ -38,7 +51,6 @@ const deleteFile = (filePath) => {
   }
 };
 
-// Delete category image
 const deleteCategoryImage = (imageUrl) => {
   if (!imageUrl || !imageUrl.startsWith("/uploads/categories/")) {
     return;
@@ -50,7 +62,6 @@ const deleteCategoryImage = (imageUrl) => {
   deleteFile(imagePath);
 };
 
-// Delete product image
 const deleteProductImage = (imageUrl) => {
   if (!imageUrl || !imageUrl.startsWith("/uploads/products/")) {
     return;
@@ -71,7 +82,7 @@ app.post("/api/users/checkMobile", async (req, res) => {
   try {
     const { mobile } = req.body;
 
-    const existingUser = await User.find({ mobile });
+    const existingUser = await User.findOne({ mobile });
 
     if (existingUser) {
       return res.status(409).json({
@@ -146,7 +157,7 @@ app.get("/api/users", async (req, res) => {
 // Fetch one user by Firebase UID
 app.get("/api/users/:id", async (req, res) => {
   try {
-    const userData = await User.find({
+    const userData = await User.findOne({
       firebaseUid: req.params.id,
     });
 
@@ -154,7 +165,6 @@ app.get("/api/users/:id", async (req, res) => {
       return res.status(404).json({
         success: false,
         message: "User not found",
-        data: null,
       });
     }
 
@@ -174,19 +184,22 @@ app.get("/api/users/:id", async (req, res) => {
   }
 });
 
-// Update user profile
+// Update user profile using Firebase UID
 app.put("/api/users/:id", async (req, res) => {
   try {
     const { name, mobile, gender } = req.body;
 
-    const updateUser = await User.findByIdAndUpdate(
-      req.params.id,
+    const updateUser = await User.findOneAndUpdate(
+      { firebaseUid: req.params.id },
       {
         name,
         mobile,
         gender,
       },
-      { new: true },
+      {
+        new: true,
+        runValidators: true,
+      },
     );
 
     if (!updateUser) {
@@ -213,7 +226,7 @@ app.put("/api/users/:id", async (req, res) => {
 });
 
 // ==================================================
-// ADMIN CATEGORY API CALLS
+// CATEGORY API CALLS
 // ==================================================
 
 // Add category
@@ -269,7 +282,9 @@ app.post(
 // Fetch all categories
 app.get("/api/categories", async (req, res) => {
   try {
-    const allCategories = await Category.find().sort({ createdAt: -1 });
+    const allCategories = await Category.find().sort({
+      createdAt: -1,
+    });
 
     return res.status(200).json({
       success: true,
@@ -315,7 +330,6 @@ app.put(
         });
       }
 
-      // Keep the existing image if no new image is uploaded
       let image = category.image;
 
       if (req.file) {
@@ -331,10 +345,12 @@ app.put(
           image,
           status: status === undefined ? category.status : status === "true",
         },
-        { new: true, runValidators: true },
+        {
+          new: true,
+          runValidators: true,
+        },
       );
 
-      // Delete old image only after a new image is uploaded
       if (req.file && category.image) {
         deleteCategoryImage(category.image);
       }
@@ -431,7 +447,8 @@ app.post("/api/products", productUpload.single("image"), async (req, res) => {
       image: `/uploads/products/${req.file.filename}`,
       status: status === undefined ? true : status === "true",
     });
-    const newInventory = await Inventory.create({
+
+    await Inventory.create({
       productId: newProduct._id,
       stock: stock,
       reorderLevel: 10,
@@ -464,7 +481,7 @@ app.get("/api/products", async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Fetched all products",
+      message: "Fetched products",
       data: allProducts,
     });
   } catch (err) {
@@ -486,7 +503,13 @@ app.get("/api/products/:id", async (req, res) => {
       "name",
     );
 
-    //   console.log(productData);
+    if (!productData) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
     return res.status(200).json({
       success: true,
       message: "Fetched product data",
@@ -498,7 +521,7 @@ app.get("/api/products/:id", async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to fetch product",
-      data: [],
+      data: null,
     });
   }
 });
@@ -533,7 +556,6 @@ app.put(
         });
       }
 
-      // Keep existing image if no new image is uploaded
       let image = product.image;
 
       if (req.file) {
@@ -557,10 +579,12 @@ app.put(
           image,
           status: status === undefined ? product.status : status === "true",
         },
-        { new: true, runValidators: true },
+        {
+          new: true,
+          runValidators: true,
+        },
       );
 
-      // Delete old image only after a new image is uploaded
       if (req.file && product.image) {
         deleteProductImage(product.image);
       }
@@ -618,7 +642,11 @@ app.delete("/api/products/:id", async (req, res) => {
   }
 });
 
-// Fetch all inventory list
+// ==================================================
+// INVENTORY API CALLS
+// ==================================================
+
+// Fetch all inventory
 app.get("/api/inventory", async (req, res) => {
   try {
     const allInventory = await Inventory.find().populate({
@@ -646,21 +674,20 @@ app.get("/api/inventory", async (req, res) => {
   }
 });
 
-// update inventory
-
+// Adjust inventory
 app.post("/api/inventory/adjust", async (req, res) => {
   try {
     const { productId, adjustType, quantity, reason } = req.body;
 
     const qty = Number(quantity);
 
-    // 1. Validate input
+    // Validate input
     if (
       !mongoose.isValidObjectId(productId) ||
       !["ADDED", "REMOVED", "CORRECTED"].includes(adjustType) ||
       quantity === "" ||
       quantity == null ||
-      isNaN(qty) ||
+      !Number.isFinite(qty) ||
       qty < 0 ||
       (adjustType !== "CORRECTED" && qty === 0) ||
       !reason?.trim()
@@ -671,8 +698,8 @@ app.post("/api/inventory/adjust", async (req, res) => {
       });
     }
 
-    // 2. Find inventory
-    const inventory = await Inventory.find({ productId });
+    // Find one inventory document
+    const inventory = await Inventory.findOne({ productId });
 
     if (!inventory) {
       return res.status(404).json({
@@ -681,11 +708,9 @@ app.post("/api/inventory/adjust", async (req, res) => {
       });
     }
 
-    // 3. Get current stock
     const previousStock = inventory.stock;
     let newStock;
 
-    // 4. Calculate new stock
     if (adjustType === "ADDED") {
       newStock = previousStock + qty;
     } else if (adjustType === "REMOVED") {
@@ -694,7 +719,6 @@ app.post("/api/inventory/adjust", async (req, res) => {
       newStock = qty;
     }
 
-    // 5. Check available stock
     if (newStock < 0) {
       return res.status(400).json({
         success: false,
@@ -702,27 +726,18 @@ app.post("/api/inventory/adjust", async (req, res) => {
       });
     }
 
-    // 6. Update inventory
     inventory.stock = newStock;
     await inventory.save();
 
-    // 7. Create stock history
-    const hist = await StockHistory.create({
+    await StockHistory.create({
       productId,
       type: adjustType,
       quantity: Math.abs(newStock - previousStock),
       previousStock,
       newStock,
       reason: reason.trim(),
-    })
-      .then((res) => {
-        //console.log(res)
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    });
 
-    // 8. Send response
     return res.status(200).json({
       success: true,
       message: "Stock updated successfully",
@@ -732,19 +747,20 @@ app.post("/api/inventory/adjust", async (req, res) => {
       },
     });
   } catch (error) {
-    //console.error("Inventory adjustment error:", error);
-    //console.log(error)
+    console.error("Inventory adjustment error:", error);
+
     return res.status(500).json({
       success: false,
       message: "Failed to update stock",
+      error: error.message,
     });
   }
 });
 
-//get inventory data for one product
+// Fetch inventory for one product
 app.get("/api/inventory/product/:productId", async (req, res) => {
   try {
-    const inventory = await Inventory.find({
+    const inventory = await Inventory.findOne({
       productId: req.params.productId,
     });
 
@@ -755,29 +771,40 @@ app.get("/api/inventory/product/:productId", async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: inventory.stock,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Fetch stock error:", error);
+
+    return res.status(500).json({
       success: false,
       message: "Failed to fetch stock",
     });
   }
 });
 
-// add to cart from PDP
+// ==================================================
+// CART API CALLS
+// ==================================================
 
+// Add product to cart
 app.post("/api/cart/:firebaseUid", async (req, res) => {
   try {
     const { firebaseUid } = req.params;
     const { productId } = req.body;
 
-    // Find the customer's cart
-    let cart = await Cart.find({ firebaseUid });
+    if (!productId || !mongoose.isValidObjectId(productId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Valid product ID is required",
+      });
+    }
 
-    // If cart doesn't exist, create an empty cart
+    // Find one cart document
+    let cart = await Cart.findOne({ firebaseUid });
+
     if (!cart) {
       cart = new Cart({
         firebaseUid,
@@ -785,7 +812,6 @@ app.post("/api/cart/:firebaseUid", async (req, res) => {
       });
     }
 
-    // Check whether the product already exists
     const existingItem = cart.items.find(
       (item) => item.productId.toString() === productId,
     );
@@ -793,27 +819,26 @@ app.post("/api/cart/:firebaseUid", async (req, res) => {
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
-      // Add the new product to the existing cart
       cart.items.push({
         productId,
         quantity: 1,
       });
     }
 
-    // Save the cart
     await cart.save();
 
-    // Return cart with product details
-    const updatedCart = await Cart.find({ firebaseUid }).populate(
+    const updatedCart = await Cart.findOne({ firebaseUid }).populate(
       "items.productId",
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: updatedCart,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Add to cart error:", error);
+
+    return res.status(500).json({
       success: false,
       message: "Failed to add product",
       error: error.message,
@@ -821,22 +846,23 @@ app.post("/api/cart/:firebaseUid", async (req, res) => {
   }
 });
 
-//get cart data of one user
-
+// Get cart of one user
 app.get("/api/cart/:firebaseUid", async (req, res) => {
   try {
     const { firebaseUid } = req.params;
 
-    const cart = await Cart.find({ firebaseUid }).populate(
+    const cart = await Cart.findOne({ firebaseUid }).populate(
       "items.productId",
     );
 
-    res.json({
+    return res.status(200).json({
       success: true,
       data: cart || { items: [] },
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Fetch cart error:", error);
+
+    return res.status(500).json({
       success: false,
       message: "Failed to fetch cart",
       error: error.message,
@@ -844,15 +870,22 @@ app.get("/api/cart/:firebaseUid", async (req, res) => {
   }
 });
 
-//cart quantity update
-
+// Update cart quantity
 app.put("/api/cart/:firebaseUid/:productId", async (req, res) => {
   try {
     const { firebaseUid, productId } = req.params;
     const { quantity } = req.body;
 
-    // Find the customer's cart
-    const cart = await Cart.find({ firebaseUid });
+    const qty = Number(quantity);
+
+    if (!Number.isInteger(qty) || qty < 1) {
+      return res.status(400).json({
+        success: false,
+        message: "Quantity must be at least 1",
+      });
+    }
+
+    const cart = await Cart.findOne({ firebaseUid });
 
     if (!cart) {
       return res.status(404).json({
@@ -861,7 +894,6 @@ app.put("/api/cart/:firebaseUid/:productId", async (req, res) => {
       });
     }
 
-    // Find the selected product in the cart
     const item = cart.items.find(
       (item) => item.productId.toString() === productId,
     );
@@ -873,21 +905,21 @@ app.put("/api/cart/:firebaseUid/:productId", async (req, res) => {
       });
     }
 
-    // Update quantity
-    item.quantity = quantity;
+    item.quantity = qty;
     await cart.save();
 
-    // Return updated cart with product details
-    const updatedCart = await Cart.find({ firebaseUid }).populate(
+    const updatedCart = await Cart.findOne({ firebaseUid }).populate(
       "items.productId",
     );
 
-    res.json({
+    return res.status(200).json({
       success: true,
       data: updatedCart,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Update cart error:", error);
+
+    return res.status(500).json({
       success: false,
       message: "Failed to update quantity",
       error: error.message,
@@ -900,7 +932,7 @@ app.delete("/api/cart/:firebaseUid/:productId", async (req, res) => {
   try {
     const { firebaseUid, productId } = req.params;
 
-    const cart = await Cart.find({ firebaseUid });
+    const cart = await Cart.findOne({ firebaseUid });
 
     if (!cart) {
       return res.status(404).json({
@@ -909,24 +941,24 @@ app.delete("/api/cart/:firebaseUid/:productId", async (req, res) => {
       });
     }
 
-    // Remove selected product
     cart.items = cart.items.filter(
       (item) => item.productId.toString() !== productId,
     );
 
     await cart.save();
 
-    // Return updated cart
-    const updatedCart = await Cart.find({ firebaseUid }).populate(
+    const updatedCart = await Cart.findOne({ firebaseUid }).populate(
       "items.productId",
     );
 
-    res.json({
+    return res.status(200).json({
       success: true,
       data: updatedCart,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Remove cart item error:", error);
+
+    return res.status(500).json({
       success: false,
       message: "Failed to remove product",
       error: error.message,
@@ -934,7 +966,9 @@ app.delete("/api/cart/:firebaseUid/:productId", async (req, res) => {
   }
 });
 
-//create order
+// ==================================================
+// ORDER API CALLS
+// ==================================================
 
 // Create order
 app.post("/api/orders", async (req, res) => {
@@ -945,12 +979,10 @@ app.post("/api/orders", async (req, res) => {
       customer,
       address,
       paymentMethod,
-      paymentStatus,
       subtotal,
       discount,
       deliveryFee,
       total,
-      orderStatus,
     } = req.body;
 
     const order = await Order.create({
@@ -965,98 +997,109 @@ app.post("/api/orders", async (req, res) => {
       total,
     });
 
-     res.status(201).json({
-       status: 'success',
+    return res.status(201).json({
+      status: "success",
       message: "Order placed successfully",
-      data:order,
+      data: order,
     });
   } catch (err) {
-    res.status(500).json({
+    console.error("Create order error:", err);
+
+    return res.status(500).json({
+      status: "error",
       message: "Failed to place order",
       error: err.message,
     });
   }
 });
 
-
-//get all orders for admin
-
-app.get("/api/orders/", async (req, res) => {
-   try {
-      const response = await Order.find().sort({ createdAt: -1 }).populate(
-      "items.productId",
-    );
-      if (response) {
-         return res.status(200).json({
-            status: 'success',
-            message: "Fetched all orders",
-            data : response
-         })
-      }
-   } catch (err) {
-      return res.status(500).json({
-            status: 'error',
-            message: "Failed to fecth orders"
-         })
-   }
-})
-
-//get one order data
-app.get("/api/orders/:id", async (req, res) => {
-   try {
-     
-      const res = await Order.findById(req.params.id)
+// Fetch all orders for admin
+app.get("/api/orders", async (req, res) => {
+  try {
+    const response = await Order.find()
       .sort({ createdAt: -1 })
-         .populate("items.productId");
-      
-    if (res) {
-      return res.status(200).json({
-        status: "success",
-        message: "Fetched order data",
-        data: response,
-      });
-    }
+      .populate("items.productId");
+
+    return res.status(200).json({
+      status: "success",
+      message: "Fetched all orders",
+      data: response,
+    });
   } catch (err) {
+    console.error("Fetch all orders error:", err);
+
     return res.status(500).json({
       status: "error",
-      message: "Failed to fecth order data",
+      message: "Failed to fetch orders",
+      error: err.message,
     });
   }
 });
 
-//find particular user orders
+// Fetch one order by MongoDB ID
+app.get("/api/orders/:id", async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id).populate(
+      "items.productId",
+    );
+
+    if (!order) {
+      return res.status(404).json({
+        status: "error",
+        message: "Order not found",
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "Fetched order data",
+      data: order,
+    });
+  } catch (err) {
+    console.error("Fetch order error:", err);
+
+    return res.status(500).json({
+      status: "error",
+      message: "Failed to fetch order data",
+      error: err.message,
+    });
+  }
+});
+
+// Fetch all orders for one user
 app.get("/api/orders/user/:firebaseUid", async (req, res) => {
   try {
     const response = await Order.find({
       firebaseUid: req.params.firebaseUid,
     })
       .sort({ createdAt: -1 })
-        .populate("items.productId");
-    if (response) {
-      return res.status(200).json({
-        status: "success",
-        message: "Fetched all orders of user",
-        data: response,
-      });
-    }
+      .populate("items.productId");
+
+    return res.status(200).json({
+      status: "success",
+      message: "Fetched all orders of user",
+      data: response,
+    });
   } catch (err) {
+    console.error("Fetch user orders error:", err);
+
     return res.status(500).json({
-      message: "Failed to fetch order of user",
+      status: "error",
+      message: "Failed to fetch orders of user",
       error: err.message,
     });
   }
 });
 
-
-
-
-
+// ==================================================
 // MONGODB CONNECTION AND SERVER STARTUP
+// ==================================================
 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB Connected Successfully");
+
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });

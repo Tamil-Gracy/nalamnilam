@@ -135,46 +135,52 @@ const Login = () => {
       try {
          const result = await signInWithPopup(auth, provider);
          const firebaseUser = result.user;
+
          console.log("Google User:", firebaseUser);
-         const checkUserExists = await axios.get(`${API}/api/users/${firebaseUser.uid}`);
-         if (checkUserExists?.data.success) {
-            //setUser(firebaseUser);
-            setUser(checkUserExists.data.data);
-         }
-         else if (!checkUserExists?.data.success) {
-            const response = await axios.post(`${API}/api/users`, {
-               firebaseUid: firebaseUser.uid,
-               name: firebaseUser.displayName || "",
-               mobile: "",
-               role: "user",
-            })
-               .then((res) => {
-                  //console.log('user create response',res);
-                  //setUser(firebaseUser);
-                  setUser(res.data.data);
-                  return res.data;
-               })
-               .catch((err) => {
-                  console.log(err);
-                  setUser(null);
-                  return null;
+
+         try {
+            // Check whether user exists in MongoDB
+            const checkUserExists = await axios.get(
+               `${API}/api/users/${firebaseUser.uid}`
+            );
+
+            if (checkUserExists.data.success) {
+               setUser(checkUserExists.data.data);
+            }
+
+         } catch (error) {
+            if (error.response?.status === 404) {
+
+               // Create new MongoDB user
+               const response = await axios.post(`${API}/api/users`, {
+                  firebaseUid: firebaseUser.uid,
+                  name: firebaseUser.displayName || "",
+                  mobile: "",
+                  role: "user",
                });
+
+               setUser(response.data.data);
+
+               console.log("New Google user saved:", response.data.data);
+
+            } else {
+               throw error;
+            }
          }
-         alert("Google login successful!", firebaseUser.uid);
+
+         alert("Google login successful!");
          navigate("/profile");
+
       } catch (error) {
-         console.error(error);
+         console.error("Google login failed:", error.response?.data || error);
+
          if (error.code === "auth/popup-closed-by-user") {
             return;
          }
-         if (error.response?.status === 404) {
-            alert("Please complete your customer registration.");
-         } else {
-            alert("Google login failed");
-         }
+
+         alert("Google login failed");
       }
    };
-
 
 
 

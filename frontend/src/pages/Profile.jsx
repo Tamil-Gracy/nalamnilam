@@ -14,14 +14,15 @@ const Profile = () => {
    const setUser = userData.setUser;
    const navigate = useNavigate();
    useEffect(() => {
-      auth.onAuthStateChanged((user) => {
+      const unsubscribe = auth.onAuthStateChanged((user) => {
          if (!user) {
-            navigate('/login');
-            return;
+            navigate("/login");
          } else {
             setLoading(false);
          }
-      })
+      });
+
+      return () => unsubscribe();
    }, [navigate]);
 
    const handleLogout = async () => {
@@ -37,7 +38,7 @@ const Profile = () => {
       }
    };
 
-
+   console.log("user", user);
 
    const [errMsg, setErrMsg] = useState({});
    //update profile
@@ -134,7 +135,7 @@ const Profile = () => {
    return (
       <>
          {/* Profile section */}
-         {user && (
+         {user?._id && (
             <section className="mx-auto max-w-5xl px-5 py-10">
 
                <p className="text-[10px] font-bold tracking-widest text-forest">

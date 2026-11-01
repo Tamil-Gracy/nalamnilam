@@ -50,7 +50,7 @@ const Header = () => {
          console.log("Logout error:", error);
       }
    };
-
+  
    return (
       <header className="sticky top-0 z-20 border-b border-forest/10 bg-[#fffdf8]">
          <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-3 relative">
