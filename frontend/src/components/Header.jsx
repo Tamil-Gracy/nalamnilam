@@ -26,7 +26,7 @@ const Header = () => {
    useEffect(() => {
       auth.onAuthStateChanged((user) => {
          if (!user) {
-            navigate('/');
+            navigate('/login');
          } if (userData?.user?.firebaseUid) {
             console.log('User logged in...', userData?.user?.firebaseUid);
          }
