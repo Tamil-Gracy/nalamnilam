@@ -135,7 +135,7 @@ const Profile = () => {
    return (
       <>
          {/* Profile section */}
-         {user?._id && (
+         {user && (
             <section className="mx-auto max-w-5xl px-5 py-10">
 
                <p className="text-[10px] font-bold tracking-widest text-forest">

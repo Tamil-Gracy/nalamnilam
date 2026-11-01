@@ -21,7 +21,7 @@ const UserProvider = ({ children }) => {
                const res = await axios.get(
                   `${API}/api/users/${firebaseUser.uid}`
                );
-
+               setlUser(res.data.data);
                // Remaining code
             } catch (error) {
                console.log("MongoDB profile fetch failed:", error.response?.status);
