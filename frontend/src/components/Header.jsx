@@ -32,7 +32,7 @@ const Header = () => {
          }
       })
       getCategories()
-   }, [user]);
+   }, [user,cartItems]);
 
 
 
@@ -67,12 +67,12 @@ const Header = () => {
                <Link to="/contact" className="font-medium text-forest hover:text-forest">Contact</Link>
 
             </nav>
-            <div
+            {/* <div
                className="hidden w-56 items-center rounded-full border border-forest/15 bg-white px-4 py-2 text-[10px] text-ink/50 md:flex focus-within:outline-1"
             >
                <input type="text" placeholder="Search organic essentials..." className="focus:outline-none"></input>
                <span className="ml-auto text-lg text-ink">⌕</span>
-            </div>
+            </div> */}
             <div className="hidden md:flex items-center gap-4 text-xl text-ink">
                {!user && (
                   <Link to="/login" className="cursor-pointer">
@@ -158,7 +158,7 @@ const Header = () => {
                )}
                <Link to='/cart' className="relative" >
                   <i className="fa-solid fa-basket-shopping"></i>
-                  <span className="absolute -right-2 -top-2 grid h-4 w-4 place-items-center rounded-full bg-forest text-[9px] text-white" >{cartItems?.length}</span>
+                  <span className="absolute -right-2 -top-2 grid h-4 w-4 place-items-center rounded-full bg-forest text-[9px] text-white" >{cartItems?.length || 0}</span>
                </Link>
             </div>
             <div className="mobileNav md:hidden relative cursor-pointer">
