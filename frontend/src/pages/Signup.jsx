@@ -217,20 +217,20 @@ const Signup = () => {
             <div className="hidden lg:block">
                <div className="relative overflow-hidden rounded-[2rem]">
                   <img
-                     src="../../images/signupimage.jpg"
+                     src="../../images/signupimage.jpeg"
                      alt="Fresh green vegetables"
                      className="h-[650px] w-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#102C1D]/85 via-transparent to-transparent"></div>
                   <div className="absolute bottom-0 p-10 text-white">
                      <p className="text-xs font-bold uppercase tracking-[.22em] text-[#DCE9C9]">
-                        A fresher routine starts here
+                        A healthier way of living begins here
                      </p>
                      <h1 className="mt-3 font-serif text-4xl font-semibold leading-tight">
                         Join the NalamNilam family.
                      </h1>
                      <p className="mt-3 max-w-md text-sm leading-6 text-white/80">
-                        Discover seasonal produce and make thoughtful choices for your everyday table.
+                        Discover thoughtfully sourced organic products that bring nature's goodness closer to your home.
                      </p>
                   </div>
                </div>

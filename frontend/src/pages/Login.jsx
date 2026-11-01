@@ -195,7 +195,7 @@ const Login = () => {
                         Welcome back
                      </p>
                      <h1 className="mt-3 max-w-lg font-serif text-4xl font-semibold leading-tight">
-                        Fresh choices for a healthier home.
+                        Nature's Best for Your Family
                      </h1>
                      <p className="mt-3 max-w-md text-sm leading-6 text-white/80">
                         Sign in to revisit your basket and keep track of your orders.
