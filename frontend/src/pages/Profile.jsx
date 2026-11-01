@@ -41,19 +41,19 @@ const Profile = () => {
 
    const [errMsg, setErrMsg] = useState({});
    //update profile
-   // const [updateProfileFormData, setupdateProfileFormData] = useState({
-   //    name: "",
-   //    mobile: "",
-   //    gender: ""
-   // });
+   const [updateProfileFormData, setupdateProfileFormData] = useState({
+      name: "",
+      mobile: "",
+      gender: ""
+   });
 
    useEffect(() => {
       if (user) {
          setupdateProfileFormData({
-            name: user.name || "",
-            mobile: user.mobile || "",
-            gender: user.gender || "",
-            email: user.email || ""
+            name: user?.name || "",
+            mobile: user?.mobile || "",
+            gender: user?.gender || "",
+            email: user?.email || ""
          });
       }
    }, [user]);
