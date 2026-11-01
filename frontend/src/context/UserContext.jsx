@@ -15,7 +15,7 @@ const UserProvider = ({ children }) => {
          setLoading(true);
 
          if (firebaseUser) {
-            console.log("Firebase user logged in:", firebaseUser.uid);
+           // console.log("Firebase user logged in:", firebaseUser.uid);
 
             try {
                const res = await axios.get(
@@ -24,7 +24,7 @@ const UserProvider = ({ children }) => {
                setlUser(res.data.data);
                // Remaining code
             } catch (error) {
-               console.log("MongoDB profile fetch failed:", error.response?.status);
+               //console.log("MongoDB profile fetch failed:", error.response?.status);
                setlUser(null);
             }
          } else {

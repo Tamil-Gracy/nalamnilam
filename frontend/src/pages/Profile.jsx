@@ -37,8 +37,7 @@ const Profile = () => {
          console.log("Logout error:", error);
       }
    };
-
-   console.log("user", user);
+   
 
    const [errMsg, setErrMsg] = useState({});
    //update profile
