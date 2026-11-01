@@ -84,41 +84,58 @@ const Profile = () => {
 
    const updateProfile = async (e) => {
       e.preventDefault();
-      const oldMobile = user.mobile?.trim();
+
+      const oldMobile = user.mobile?.trim() || "";
       const newMobile = updateProfileFormData.mobile.trim();
 
-      const mobileCheck = await axios
-         .post(`${API}/api/users/checkMobile`, {
-            mobile: updateProfileFormData.mobile.trim()
-         })
-         .then((res) => {
+      // Check mobile only if it has changed
+      if (oldMobile !== newMobile) {
+         try {
+            const mobileCheck = await axios.post(
+               `${API}/api/users/checkMobile`,
+               {
+                  mobile: newMobile
+               }
+            );
+
+            if (!mobileCheck.data.success) {
+               setErrMsg((prev) => ({
+                  ...prev,
+                  mobile: "Mobile number already registered"
+               }));
+               return;
+            }
+
             setErrMsg((prev) => ({
                ...prev,
                mobile: ""
             }));
-            return res.data;
-         })
-         .catch((err) => {
+
+         } catch (err) {
             setErrMsg((prev) => ({
                ...prev,
                mobile: err.response?.data?.message || "Mobile check failed"
             }));
-            return null;
-         });
-
-      if (mobileCheck == null && oldMobile != newMobile) {
-         return;
+            return;
+         }
       }
-      //console.log(mobileCheck)
-      const updateProfileRes = await axios.put(`${API}/api/users/${user._id}`, updateProfileFormData)
-         .then((res) => {
-            setUser(res?.data.data);
-            alert("Profile updated successfully...")
-         }).catch((err) => {
-            console.log(err);
-         })
 
-   }
+      // Update profile
+      try {
+         const updateProfileRes = await axios.put(
+            `${API}/api/users/${user.firebaseUid}`,
+            updateProfileFormData
+         );
+
+         setUser(updateProfileRes.data.data);
+
+         alert("Profile updated successfully");
+
+      } catch (err) {
+         console.log("Profile update error:", err.response?.data || err.message);
+         alert(err.response?.data?.message || "Profile update failed");
+      }
+   };
 
 
    if (loading) {

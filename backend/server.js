@@ -81,10 +81,10 @@ const deleteProductImage = (imageUrl) => {
 app.post("/api/users/checkMobile", async (req, res) => {
   try {
     const { mobile } = req.body;
-
+   
     const existingUser = await User.findOne({ mobile });
 
-    if (existingUser) {
+    if (existingUser && existingUser.mobile === mobile && existingUser.mobile !== "") {
       return res.status(409).json({
         success: false,
         message: "Mobile number already registered",
