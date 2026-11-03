@@ -132,7 +132,7 @@ const Orders = () => {
                                  {order._id}
                               </td>
 
-                              <td className="px-5 py-4">{order.customer}</td>
+                              <td className="px-5 py-4">{order.customer?.name}</td>
 
                               <td className="px-5 py-4 font-medium">
                                  ₹{order.total.toLocaleString("en-IN")}
