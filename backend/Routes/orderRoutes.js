@@ -128,4 +128,74 @@ router.get("/user/:firebaseUid", async (req, res) => {
   }
 });
 
+
+//order status update
+router.patch("/:id", async (req, res) => {
+  try {
+    const { orderStatus } = req.body;
+
+    const updateOrder = await Order.findOneAndUpdate(
+      { _id: req.params.id },
+      { orderStatus },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    if (!updateOrder) {
+      return res.status(404).json({
+        status: "error",
+        message: "Order not found",
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "Order status updated successfully",
+      data: updateOrder,
+    });
+  } catch (err) {
+    console.error("Update order status error:", err);
+
+    return res.status(500).json({
+      status: "error",
+      message: "Failed to update order status",
+      error: err.message,
+    });
+  }
+});
+
+export default router;
+
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    if (!updateUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: updateUser,
+    });
+  } catch (err) {
+    console.error("Update profile error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update profile",
+      error: err.message,
+    });
+  }
+});
+
 export default router;

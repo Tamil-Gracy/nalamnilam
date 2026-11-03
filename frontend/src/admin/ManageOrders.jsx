@@ -18,6 +18,7 @@ const statusStyles = {
 const Orders = () => {
    const [orders, setOrders] = useState([]);
    const [selectedOrder, setSelectedOrder] = useState(null);
+   const [orderStatus, setOrderStatus] = useState(null);
 
 
    // Fetch orders
@@ -44,6 +45,21 @@ const Orders = () => {
       "rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm outline-none focus:border-[#315C3B]";
 
    const closePopup = () => setSelectedOrder(null);
+
+   const updateOrderStatus = async () => {
+      try {
+         await axios.put(`${API}/api/orders/${selectedOrder._id}`, { orderStatus });
+         setSelectedOrder(null);
+         fetchOrders();
+         alert("Order status updated successfully!");
+      } catch (err) {
+         console.log("Error updating order status:", err.response?.data);
+      }
+   }
+
+
+
+
 
    return (
       <div className="min-h-screen lg:grid lg:grid-cols-[250px_1fr]">
@@ -142,10 +158,10 @@ const Orders = () => {
 
                               <td className="px-5 py-4">
                                  <span
-                                    className={`whitespace - nowrap rounded - full px - 3 py - 1 text - xs font - bold ${statusStyles[order.orderStatus]
+                                    className={`whitespace - nowrap rounded - full px - 3 py - 1 text - xs font - bold ${statusStyles}${order.orderStatus}
                                        } `}
                                  >
-                                    {order.status}
+                                    {order.orderStatus}
                                  </span>
                               </td>
 
@@ -333,7 +349,7 @@ const Orders = () => {
 
                      <button
                         type="button"
-                        onClick={closePopup}
+                        onClick={updateOrderStatus}
                         className="rounded-full bg-[#315C3B] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#24472D]"
                      >
                         Update Status
