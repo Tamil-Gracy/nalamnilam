@@ -138,11 +138,11 @@ const Orders = () => {
                                  ₹{order.total.toLocaleString("en-IN")}
                               </td>
 
-                              <td className="px-5 py-4">{order.payment}</td>
+                              <td className="px-5 py-4">{order.paymentMethod}</td>
 
                               <td className="px-5 py-4">
                                  <span
-                                    className={`whitespace - nowrap rounded - full px - 3 py - 1 text - xs font - bold ${statusStyles[order.status]
+                                    className={`whitespace - nowrap rounded - full px - 3 py - 1 text - xs font - bold ${statusStyles[order.orderStatus]
                                        } `}
                                  >
                                     {order.status}
@@ -197,7 +197,7 @@ const Orders = () => {
                            id="order-popup-title"
                            className="mt-1 text-xl font-bold text-stone-800"
                         >
-                           {selectedOrder.id}
+                           {selectedOrder._id}
                         </h2>
                         <p className="mt-1 text-sm text-stone-500">
                            Placed on {selectedOrder.date}
@@ -225,21 +225,21 @@ const Orders = () => {
                            <div>
                               <p className="text-xs text-stone-500">Customer Name</p>
                               <p className="mt-1 text-sm font-semibold text-stone-800">
-                                 {selectedOrder.customer}
+                                 {selectedOrder.customer?.name}
                               </p>
                            </div>
 
                            <div>
                               <p className="text-xs text-stone-500">Phone Number</p>
                               <p className="mt-1 text-sm font-semibold text-stone-800">
-                                 {selectedOrder.phone}
+                                 {selectedOrder.customer?.mobile}
                               </p>
                            </div>
 
                            <div className="sm:col-span-2">
                               <p className="text-xs text-stone-500">Delivery Address</p>
                               <p className="mt-1 text-sm font-medium text-stone-800">
-                                 {selectedOrder.address}
+                                 {selectedOrder.address?.house}, {selectedOrder.address?.street}, {selectedOrder.address?.city}, {selectedOrder.address?.state} - {selectedOrder.address?.pincode  }
                               </p>
                            </div>
                         </div>
@@ -280,7 +280,7 @@ const Orders = () => {
                            <div>
                               <p className="text-sm text-stone-500">Payment Method</p>
                               <p className="mt-1 font-semibold text-stone-800">
-                                 {selectedOrder.payment}
+                                 {selectedOrder.paymentMethod}
                               </p>
                            </div>
 
@@ -308,7 +308,7 @@ const Orders = () => {
 
                         <select
                            id="order-status"
-                           defaultValue={selectedOrder.status}
+                           defaultValue={selectedOrder.orderStatus}
                            className={`${inputStyle} w - full`}
                         >
                            <option value="Placed">Placed</option>
