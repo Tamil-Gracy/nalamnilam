@@ -24,7 +24,6 @@ const EditProduct = () => {
             : product?.category || "",
       price: product?.price ?? "",
       discountPrice: product?.discountPrice ?? "",
-      stock: product?.stock ?? "",
       quantity: product?.quantity ?? "",
       unit: product?.unit || "",
       image: null,
@@ -114,7 +113,6 @@ const EditProduct = () => {
          formData.append("category", editFormData.category);
          formData.append("price", editFormData.price);
          formData.append("discountPrice", editFormData.discountPrice);
-         formData.append("stock", editFormData.stock);
          formData.append("quantity", editFormData.quantity);
          formData.append("unit", editFormData.unit);
          formData.append("badge", editFormData.badge);
@@ -295,7 +293,7 @@ const EditProduct = () => {
                            </select>
                         </label>
 
-                        <label className="text-sm font-semibold">
+                        {/* <label className="text-sm font-semibold">
                            Available stock
                            <input
                               type="number"
@@ -306,7 +304,7 @@ const EditProduct = () => {
                               onChange={handleChange}
                               className="mt-2 block w-full rounded-xl border border-stone-300 px-4 py-3 font-normal"
                            />
-                        </label>
+                        </label> */}
                         <label className="text-sm font-semibold">
                           Badge
                            <select

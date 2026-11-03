@@ -190,6 +190,7 @@ const Signup = () => {
          .post(`${API}/api/users`, {
             firebaseUid: firebaseUser.user.uid,
             name: formData.name.trim(),
+            email: formData.email.trim(),
             mobile: formData.mobile.trim(),
             role: "user"
          })

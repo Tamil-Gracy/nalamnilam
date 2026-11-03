@@ -1,45 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SideBar from "./components/SideBar";
 import TopBar from "./components/TopBar";
+import axios from "axios";
 
-const customersData = [
-   {
-      id: 1,
-      name: "Meena S.",
-      email: "meena@example.com",
-      phone: "98765 43210",
-      orders: 12,
-      spend: "₹6,420",
-      status: "Active",
-   },
-   {
-      id: 2,
-      name: "Arun K.",
-      email: "arun@example.com",
-      phone: "98765 12340",
-      orders: 8,
-      spend: "₹3,210",
-      status: "Active",
-   },
-   {
-      id: 3,
-      name: "Divya R.",
-      email: "divya@example.com",
-      phone: "98765 43201",
-      orders: 15,
-      spend: "₹9,850",
-      status: "Active",
-   },
-   {
-      id: 4,
-      name: "Karthik P.",
-      email: "karthik@example.com",
-      phone: "98765 12034",
-      orders: 3,
-      spend: "₹1,120",
-      status: "Active",
-   },
-];
+const API = import.meta.env.VITE_API_URL;
 
 const Customers = () => {
    const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -59,6 +23,19 @@ const Customers = () => {
       setSelectedCustomer(null);
       setPopupType("");
    };
+
+   const [customers, setCustomers] = useState([]);
+
+   const fetchCustomers = async () => {
+      try {
+         const res = await axios.get(`${API}/api/users`);
+         console.log("Fetched customers:", res.data.data);
+         setCustomers(res.data.data);
+      } catch (err) {
+         console.log("Error fetching customers:", err.response?.data);
+      }
+   };
+ 
 
    return (
       <div className="min-h-screen lg:grid lg:grid-cols-[250px_1fr]">
@@ -83,14 +60,14 @@ const Customers = () => {
                   <div className="rounded-2xl border border-stone-200 bg-white p-5">
                      <p className="text-sm text-stone-500">Total customers</p>
                      <p className="mt-2 text-3xl font-bold text-[#1F3827]">
-                        1,284
+                        {customers.length}
                      </p>
                      <p className="mt-2 text-xs text-stone-500">
                         Registered accounts
                      </p>
                   </div>
 
-                  <div className="rounded-2xl border border-stone-200 bg-white p-5">
+                  {/* <div className="rounded-2xl border border-stone-200 bg-white p-5">
                      <p className="text-sm text-stone-500">New this month</p>
                      <p className="mt-2 text-3xl font-bold text-[#1F3827]">
                         86
@@ -98,9 +75,9 @@ const Customers = () => {
                      <p className="mt-2 text-xs text-stone-500">
                         Demo figures
                      </p>
-                  </div>
+                  </div> */}
 
-                  <div className="rounded-2xl border border-stone-200 bg-white p-5">
+                  {/* <div className="rounded-2xl border border-stone-200 bg-white p-5">
                      <p className="text-sm text-stone-500">Repeat customers</p>
                      <p className="mt-2 text-3xl font-bold text-[#1F3827]">
                         64%
@@ -108,7 +85,7 @@ const Customers = () => {
                      <p className="mt-2 text-xs text-stone-500">
                         Customer retention
                      </p>
-                  </div>
+                  </div> */}
                </div>
 
                {/* Search */}
@@ -129,16 +106,16 @@ const Customers = () => {
                            <th className="px-5 py-4">Email</th>
                            <th className="px-5 py-4">Phone</th>
                            <th className="px-5 py-4">Orders</th>
-                           <th className="px-5 py-4">Lifetime spend</th>
-                           <th className="px-5 py-4">Status</th>
-                           <th className="px-5 py-4">Actions</th>
+                           {/* <th className="px-5 py-4">Actions</th> */}
                         </tr>
                      </thead>
 
                      <tbody>
-                        {customersData.map((customer) => (
-                           <tr
-                              key={customer.id}
+                        {customers.map((customer) => {
+                           const res = axios.get(`${API}/api/orders/${customer._id}`);
+                           const orders = res.data.data;
+                           (<tr
+                              key={customer._id}
                               className="border-t border-stone-100 transition hover:bg-stone-50/70"
                            >
                               <td className="px-5 py-4 font-semibold text-stone-800">
@@ -150,24 +127,13 @@ const Customers = () => {
                               </td>
 
                               <td className="px-5 py-4 text-stone-600">
-                                 {customer.phone}
+                                 {customer.mobile}
                               </td>
 
                               <td className="px-5 py-4 text-stone-700">
-                                 {customer.orders}
+                                 {orders.length}
                               </td>
-
-                              <td className="px-5 py-4 font-medium text-stone-700">
-                                 {customer.spend}
-                              </td>
-
-                              <td className="px-5 py-4">
-                                 <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">
-                                    {customer.status}
-                                 </span>
-                              </td>
-
-                              <td className="px-5 py-4">
+                              {/* <td className="px-5 py-4">
                                  <div className="flex items-center gap-3">
                                     <button
                                        type="button"
@@ -185,9 +151,9 @@ const Customers = () => {
                                        Delete
                                     </button>
                                  </div>
-                              </td>
+                              </td> */}
                            </tr>
-                        ))}
+                        )})}
                      </tbody>
                   </table>
                </div>

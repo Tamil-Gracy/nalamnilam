@@ -47,7 +47,6 @@ router.post("/", productUpload.single("image"), async (req, res) => {
       category,
       price,
       discountPrice,
-      stock,
       quantity,
       unit,
       badge,
@@ -67,7 +66,6 @@ router.post("/", productUpload.single("image"), async (req, res) => {
       category,
       price,
       discountPrice,
-      stock,
       quantity,
       unit,
       badge,
@@ -154,86 +152,80 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update product
-router.put(
-  "/:id",
-  productUpload.single("image"),
-  async (req, res) => {
-    try {
-      const {
-        name,
-        description,
-        category,
-        price,
-        discountPrice,
-        stock,
-        quantity,
-        unit,
-        badge,
-        status,
-      } = req.body;
+router.put("/:id", productUpload.single("image"), async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      category,
+      price,
+      discountPrice,
+      quantity,
+      unit,
+      badge,
+      status,
+    } = req.body;
 
-      const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id);
 
-      if (!product) {
-        if (req.file) deleteFile(req.file.path);
-
-        return res.status(404).json({
-          success: false,
-          message: "Product not found",
-        });
-      }
-
-      let image = product.image;
-
-      if (req.file) {
-        image = `/uploads/products/${req.file.filename}`;
-      }
-
-      const updateProduct = await Product.findByIdAndUpdate(
-        req.params.id,
-        {
-          name: name !== undefined ? name : product.name,
-          description:
-            description !== undefined ? description : product.description,
-          category: category !== undefined ? category : product.category,
-          price: price !== undefined ? price : product.price,
-          discountPrice:
-            discountPrice !== undefined ? discountPrice : product.discountPrice,
-          stock: stock !== undefined ? stock : product.stock,
-          quantity: quantity !== undefined ? quantity : product.quantity,
-          unit: unit !== undefined ? unit : product.unit,
-          badge: badge !== undefined ? badge : product.badge,
-          image,
-          status: status === undefined ? product.status : status === "true",
-        },
-        {
-          new: true,
-          runValidators: true,
-        },
-      );
-
-      if (req.file && product.image) {
-        deleteProductImage(product.image);
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: "Product updated successfully",
-        data: updateProduct,
-      });
-    } catch (err) {
+    if (!product) {
       if (req.file) deleteFile(req.file.path);
 
-      console.error("Update product error:", err);
-
-      return res.status(500).json({
+      return res.status(404).json({
         success: false,
-        message: "Failed to update product",
-        error: err.message,
+        message: "Product not found",
       });
     }
-  },
-);
+
+    let image = product.image;
+
+    if (req.file) {
+      image = `/uploads/products/${req.file.filename}`;
+    }
+
+    const updateProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: name !== undefined ? name : product.name,
+        description:
+          description !== undefined ? description : product.description,
+        category: category !== undefined ? category : product.category,
+        price: price !== undefined ? price : product.price,
+        discountPrice:
+          discountPrice !== undefined ? discountPrice : product.discountPrice,
+        quantity: quantity !== undefined ? quantity : product.quantity,
+        unit: unit !== undefined ? unit : product.unit,
+        badge: badge !== undefined ? badge : product.badge,
+        image,
+        status: status === undefined ? product.status : status === "true",
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    if (req.file && product.image) {
+      deleteProductImage(product.image);
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Product updated successfully",
+      data: updateProduct,
+    });
+  } catch (err) {
+    if (req.file) deleteFile(req.file.path);
+
+    console.error("Update product error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update product",
+      error: err.message,
+    });
+  }
+});
 
 // Delete product
 router.delete("/:id", async (req, res) => {

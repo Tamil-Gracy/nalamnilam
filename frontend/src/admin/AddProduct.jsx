@@ -31,12 +31,11 @@ const AddProduct = () => {
       category: "",
       price: "",
       discountPrice: "",
-      stock: "",
       quantity: "",
       unit: "",
       image: null,
-      badge:"",
-      status:"true"
+      badge: "",
+      status: "true"
    })
    const [message, setMessage] = useState("");
    const [messageType, setMessageType] = useState("success");
@@ -50,7 +49,7 @@ const AddProduct = () => {
 
    // Show success or error popup
    const showMessage = (type, text) => {
-      setMessageType(type);  
+      setMessageType(type);
       setMessage(text);
       setPopup("message");
    };
@@ -74,7 +73,6 @@ const AddProduct = () => {
          formData.append("category", addFormData.category);
          formData.append("price", addFormData.price);
          formData.append("discountPrice", addFormData.discountPrice);
-         formData.append("stock", addFormData.stock);
          formData.append("quantity", addFormData.quantity);
          formData.append("unit", addFormData.unit);
          formData.append("status", addFormData.status);
@@ -128,7 +126,7 @@ const AddProduct = () => {
                                     setAddFormData((prev) => (
                                        {
                                           ...prev,
-                                          name:e.target.value
+                                          name: e.target.value
                                        }
                                     ))
                                  }}
@@ -187,7 +185,6 @@ const AddProduct = () => {
                                  className="mt-2 block w-full rounded-xl border border-stone-300 px-4 py-3 font-normal"
                                  name="discountPrice"
                                  value={addFormData.discountPrice}
-                                 required
                                  onChange={(e) => {
                                     setAddFormData((prev) => (
                                        {
@@ -301,8 +298,7 @@ const AddProduct = () => {
                               Product status
                               <select
                                  className="mt-2 block w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-normal"
-                                 name="stock"
-                                 required
+                                 name="status"
                                  value={addFormData.status}
                                  onChange={(e) => {
                                     setAddFormData((prev) => (
@@ -332,7 +328,7 @@ const AddProduct = () => {
                                        image: e.target.files[0] || null,
                                     }))
                                  }
-                              
+
                               />
                            </label>
                            <label className="text-sm font-semibold sm:col-span-2">

@@ -14,7 +14,11 @@ router.post("/checkMobile", async (req, res) => {
 
     const existingUser = await User.findOne({ mobile });
 
-    if (existingUser && existingUser.mobile === mobile && existingUser.mobile !== "") {
+    if (
+      existingUser &&
+      existingUser.mobile === mobile &&
+      existingUser.mobile !== ""
+    ) {
       return res.status(409).json({
         success: false,
         message: "Mobile number already registered",
@@ -38,12 +42,13 @@ router.post("/checkMobile", async (req, res) => {
 // Create user
 router.post("/", async (req, res) => {
   try {
-    const { firebaseUid, name, mobile, role } = req.body;
+    const { firebaseUid, name, mobile, email, role } = req.body;
 
     const newUser = await User.create({
       firebaseUid,
       name,
       mobile,
+      email,
       role,
     });
 

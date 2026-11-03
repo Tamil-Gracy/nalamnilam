@@ -155,6 +155,7 @@ const Login = () => {
                const response = await axios.post(`${API}/api/users`, {
                   firebaseUid: firebaseUser.uid,
                   name: firebaseUser.displayName || "",
+                  email: firebaseUser.email || "",
                   mobile: "",
                   role: "user",
                });

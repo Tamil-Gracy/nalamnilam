@@ -101,7 +101,7 @@ const Login = () => {
             );
             setTimeout(() => {
                navigate("/admin/dashboard");
-            }, 3000);
+            }, 2000);
             return res;
          })
          .catch((err) => {
