@@ -48,7 +48,7 @@ const Orders = () => {
 
    const updateOrderStatus = async () => {
       try {
-         await axios.put(`${API}/api/orders/${selectedOrder._id}`, { orderStatus });
+         await axios.patch(`${API}/api/orders/${selectedOrder._id}`, { orderStatus });
          setSelectedOrder(null);
          fetchOrders();
          alert("Order status updated successfully!");
@@ -216,7 +216,7 @@ const Orders = () => {
                            {selectedOrder._id}
                         </h2>
                         <p className="mt-1 text-sm text-stone-500">
-                           Placed on {selectedOrder.date}
+                           Placed on {selectedOrder.createdAt}
                         </p>
                      </div>
 
