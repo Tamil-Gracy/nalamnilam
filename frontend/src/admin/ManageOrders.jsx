@@ -169,7 +169,7 @@ const Orders = () => {
                                  <button
                                     type="button"
                                     onClick={() => setSelectedOrder(order)}
-                                    className="font-bold text-[#315C3B] hover:underline"
+                                    className="font-bold text-[#315C3B] hover:underline cursor-pointer"
                                  >
                                     Open
                                  </button>
@@ -216,7 +216,13 @@ const Orders = () => {
                            {selectedOrder._id}
                         </h2>
                         <p className="mt-1 text-sm text-stone-500">
-                           Placed on {selectedOrder.createdAt}
+                           Placed on  {selectedOrder.createdAt
+                              ? new Date(selectedOrder.createdAt).toLocaleDateString("en-IN", {
+                                 day: "numeric",
+                                 month: "short",
+                                 year: "numeric",
+                              })
+                              : ""}
                         </p>
                      </div>
 

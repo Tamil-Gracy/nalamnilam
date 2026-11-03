@@ -108,7 +108,7 @@ const Orders = () => {
                 </div>
 
                 <span className="rounded-full bg-[#eaf5e8] px-3 py-1 text-sm font-semibold capitalize text-[#286642]">
-                  {order.status || "Placed"}
+                  {order.orderStatus || "Placed"}
                 </span>
               </div>
 
