@@ -75,7 +75,7 @@ router.post("/", productUpload.single("image"), async (req, res) => {
 
     await Inventory.create({
       productId: newProduct._id,
-      stock: stock,
+      stock: 1,
       reorderLevel: 10,
     });
 
