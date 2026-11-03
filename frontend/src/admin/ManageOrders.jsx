@@ -328,8 +328,8 @@ const Orders = () => {
                            className={`${inputStyle} w - full`}
                         >
                            <option value="Placed">Placed</option>
-                           <option value="Confirmed">Confirmed</option>
-                           <option value="Preparing">Preparing</option>
+                           <option value="Packed">Packed</option>
+                           <option value="Shipped">Shipped</option>
                            <option value="Out for delivery">Out for delivery</option>
                            <option value="Delivered">Delivered</option>
                            <option value="Cancelled">Cancelled</option>
