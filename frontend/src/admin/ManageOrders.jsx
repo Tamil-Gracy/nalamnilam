@@ -48,7 +48,7 @@ const Orders = () => {
 
    const updateOrderStatus = async () => {
       try {
-         await axios.patch(`${API}/api/orders/${selectedOrder._id}`, { orderStatus });
+         await axios.patch(`${API}/api/orders/${selectedOrder._id}`, { orderStatus: orderStatus.trim() });
          setSelectedOrder(null);
          fetchOrders();
          alert("Order status updated successfully!");
@@ -331,7 +331,7 @@ const Orders = () => {
                            <option value="Placed">Placed</option>
                            <option value="Packed">Packed</option>
                            <option value="Shipped">Shipped</option>
-                           <option value="Out for delivery">Out for delivery</option>
+                           <option value="Out for Delivery">Out for Delivery</option>
                            <option value="Delivered">Delivered</option>
                            <option value="Cancelled">Cancelled</option>
                         </select>
