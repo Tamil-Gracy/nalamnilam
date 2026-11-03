@@ -15,7 +15,8 @@ const TopBar = () => {
                   <b className="block text-sm">Store Admin</b>
                   <small className="text-xs text-stone-500">Administrator</small>
                </span>
-               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#DCE9C9] font-bold text-[#315C3B]">A</div>
+               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#DCE9C9] font-bold text-[#315C3B]">
+                  <img src="../../images/logobadge.png" alt="Admin Avatar" className="h-full w-full rounded-full object-cover p-1" /></div>
             </div>
          </header>
       </>

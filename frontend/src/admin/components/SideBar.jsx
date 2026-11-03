@@ -33,6 +33,10 @@ const SideBar = () => {
                   <span className="w-5 text-center">⌂</span>
                   Dashboard
                </NavLink>
+               <NavLink to="/admin/categories" className={navClass}>
+                  <span className="w-5 text-center">▧</span>
+                  Categories
+               </NavLink>
                <NavLink to="/admin/products" className={navClass}>
                   <span className="w-5 text-center">▦</span>
                   Products
@@ -53,18 +57,15 @@ const SideBar = () => {
                   <span className="w-5 text-center">♙</span>
                   Customers
                </NavLink>
-               <NavLink to="/admin/categories" className={navClass}>
-                  <span className="w-5 text-center">▧</span>
-                  Categories
-               </NavLink>
-               <NavLink to="/admin/coupons" className={navClass}>
+              
+               {/* <NavLink to="/admin/coupons" className={navClass}>
                   <span className="w-5 text-center">％</span>
                   Coupons
                </NavLink>
                <NavLink to="/admin/analytics" className={navClass}>
                   <span className="w-5 text-center">↗</span>
                   Analytics
-               </NavLink>
+               </NavLink> */}
                <NavLink to="/admin/settings" className={navClass}>
                   <span className="w-5 text-center">⚙</span>
                   Settings
@@ -74,11 +75,6 @@ const SideBar = () => {
                   Logout
                </a>
             </nav>
-            <div className="mt-8 hidden rounded-2xl bg-[#F8F7F0] p-4 lg:block">
-               <p className="text-xs font-bold uppercase tracking-wider text-[#315C3B]">Store status</p>
-               <p className="mt-2 text-sm font-semibold">Local delivery active</p>
-               <p className="mt-1 text-xs leading-5 text-stone-500">Manage serviceable PIN codes in settings.</p>
-            </div>
             <NavLink to="../../" className="mt-6 block rounded-xl border border-stone-200 px-4 py-3 text-sm font-semibold text-stone-600 hover:bg-stone-50">← View storefront</NavLink>
          </aside>
       </>
