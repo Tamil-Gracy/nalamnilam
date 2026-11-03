@@ -326,6 +326,7 @@ const Orders = () => {
                            id="order-status"
                            defaultValue={selectedOrder.orderStatus}
                            className={`${inputStyle} w - full`}
+                           onChange={(e) => setOrderStatus(e.target.value)}
                         >
                            <option value="Placed">Placed</option>
                            <option value="Packed">Packed</option>
@@ -342,7 +343,7 @@ const Orders = () => {
                      <button
                         type="button"
                         onClick={closePopup}
-                        className="rounded-full border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-700 hover:bg-stone-50"
+                        className="rounded-full border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-700 hover:bg-stone-50 cursor-pointer"
                      >
                         Close
                      </button>
@@ -350,7 +351,7 @@ const Orders = () => {
                      <button
                         type="button"
                         onClick={updateOrderStatus}
-                        className="rounded-full bg-[#315C3B] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#24472D]"
+                        className="rounded-full bg-[#315C3B] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#24472D] cursor-pointer"
                      >
                         Update Status
                      </button>
