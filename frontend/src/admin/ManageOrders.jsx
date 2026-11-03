@@ -34,10 +34,10 @@ const Orders = () => {
          fetchOrders();
       }, []);
    
-   const newOrdersCount = orders.filter((order) => order.status === "Placed").length
-   const shippedOrderCount  = orders.filter((order) => order.status === "Shipped").length
-   const outForDeliveryCount = orders.filter((order) => order.status === "Out for Delivery").length
-   const deliveredCount = orders.filter((order) => order.status === "Delivered").length
+   const newOrdersCount = orders.filter((order) => order.status === "Placed").length;
+   const shippedOrderCount = orders.filter((order) => order.status === "Shipped").length;
+   const outForDeliveryCount = orders.filter((order) => order.status === "Out for Delivery").length;
+   const deliveredCount = orders.filter((order) => order.status === "Delivered").length;
    
    
    const inputStyle =
@@ -125,11 +125,11 @@ const Orders = () => {
                      <tbody>
                         {orders.map((order) => (
                            <tr
-                              key={order.id}
+                              key={order._id}
                               className="border-t border-stone-100 transition hover:bg-stone-50"
                            >
                               <td className="px-5 py-4 font-semibold text-stone-800">
-                                 {order.id}
+                                 {order._id}
                               </td>
 
                               <td className="px-5 py-4">{order.customer}</td>
