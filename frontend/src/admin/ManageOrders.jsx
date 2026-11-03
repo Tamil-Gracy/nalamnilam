@@ -34,10 +34,10 @@ const Orders = () => {
          fetchOrders();
       }, []);
    
-   const newOrdersCount = orders.filter((order) => order.status === "Placed").length;
-   const shippedOrderCount = orders.filter((order) => order.status === "Shipped").length;
-   const outForDeliveryCount = orders.filter((order) => order.status === "Out for Delivery").length;
-   const deliveredCount = orders.filter((order) => order.status === "Delivered").length;
+   const newOrdersCount = orders.filter((order) => order.orderStatus === "Placed").length;
+   const shippedOrderCount = orders.filter((order) => order.orderStatus === "Shipped").length;
+   const outForDeliveryCount = orders.filter((order) => order.orderStatus === "Out for Delivery").length;
+   const deliveredCount = orders.filter((order) => order.orderStatus === "Delivered").length;
    
    
    const inputStyle =
