@@ -167,35 +167,3 @@ router.patch("/:id", async (req, res) => {
 });
 
 export default router;
-
-      },
-      {
-        new: true,
-        runValidators: true,
-      },
-    );
-
-    if (!updateUser) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Profile updated successfully",
-      data: updateUser,
-    });
-  } catch (err) {
-    console.error("Update profile error:", err);
-
-    return res.status(500).json({
-      success: false,
-      message: "Failed to update profile",
-      error: err.message,
-    });
-  }
-});
-
-export default router;
