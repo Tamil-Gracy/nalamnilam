@@ -309,7 +309,6 @@ const EditProduct = () => {
                           Badge
                            <select
                               name="badge"
-                              required
                               value={editFormData.badge}
                               onChange={handleChange}
                               className="mt-2 block w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-normal"
@@ -326,7 +325,6 @@ const EditProduct = () => {
                            Product status
                            <select
                               name="status"
-                              required
                               value={editFormData.status}
                               onChange={handleChange}
                               className="mt-2 block w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-normal"
@@ -368,7 +366,6 @@ const EditProduct = () => {
                            <textarea
                               name="description"
                               rows="4"
-                              required
                               value={editFormData.description}
                               onChange={handleChange}
                               className="mt-2 block w-full rounded-xl border border-stone-300 px-4 py-3 font-normal"
