@@ -160,7 +160,7 @@ const Customers = () => {
                   </table>
                </div>
             </main>
-         </div>
+         </div> 
 
          {/* Edit Customer Popup */}
          {popupType === "edit" && selectedCustomer && (
