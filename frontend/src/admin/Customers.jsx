@@ -119,7 +119,7 @@ const Customers = () => {
                            return (
                               <tr
                                  key={customer._id}
-                                 className="border-t border-stone-100 transition hover:bg-stone-50/70">                           >
+                                 className="border-t border-stone-100 transition hover:bg-stone-50/70">
                                  <td className="px-5 py-4 font-semibold text-stone-800">
                                     {customer.name}
                                  </td>
