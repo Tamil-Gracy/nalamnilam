@@ -133,7 +133,7 @@ const Customers = () => {
                                  </td>
 
                                  <td className="px-5 py-4 text-stone-700">
-                                    {orders.length}
+                                    {orders?.length || 0 }
                                  </td>
                                  {/* <td className="px-5 py-4">
                                  <div className="flex items-center gap-3">
