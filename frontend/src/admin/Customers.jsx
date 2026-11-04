@@ -35,7 +35,9 @@ const Customers = () => {
          console.log("Error fetching customers:", err.response?.data);
       }
    };
- 
+   useEffect(() => {
+      fetchCustomers();
+   }, []);
 
    return (
       <div className="min-h-screen lg:grid lg:grid-cols-[250px_1fr]">
