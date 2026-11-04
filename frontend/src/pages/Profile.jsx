@@ -17,6 +17,7 @@ const Profile = () => {
       const unsubscribe = auth.onAuthStateChanged((user) => {
          if (!user) {
             navigate("/login");
+            return;
          } else {
             setLoading(false);
          }
