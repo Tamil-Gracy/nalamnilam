@@ -203,7 +203,7 @@ const Product = () => {
                {/* Price */}
                <div className="mt-5 flex items-baseline gap-2">
                   <span className="font-serif text-3xl font-bold text-forest sm:text-4xl">
-                     {product.price}
+                     ₹{product.price}
                   </span>
                   <span className="text-sm text-ink/55">/ {product.quantity}{product.unit}</span>
                </div>
@@ -281,7 +281,7 @@ const Product = () => {
                </div>
 
                <p className="mt-3 text-xs text-ink/50">
-                  Quantity: {quantity} {product.unit} · Subtotal: ₹{Number(product.price) * quantity}
+                  Quantity:  {product.quantity}{product.unit} · Subtotal: ₹{Number(product.price) * quantity}
                </p>
 
                {/* Delivery Information */}

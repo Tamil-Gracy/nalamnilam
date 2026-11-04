@@ -196,7 +196,7 @@ const Header = () => {
                         <i className="fa-solid fa-chevron-right"></i>
                      </Link>
                      {categories.slice(0, 3).map((cat) => {
-                        return (<Link to={`/category/${cat._id}`} "font-medium text-[#24563B] rounded-lg px-3 py-2 flex justify-between items-center" >
+                        return (<Link to={`/category/${cat._id}`} className="font-medium text-[#24563B] rounded-lg px-3 py-2 flex justify-between items-center" >
                            {cat.name}
                            <i className="fa-solid fa-chevron-right"></i>
                         </Link>)
