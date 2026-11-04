@@ -116,26 +116,26 @@ const Customers = () => {
                         {customers.map((customer) => {
                            const res = axios.get(`${API}/api/orders/user/${customer.firebaseUid}`);
                            const orders = res.data.data;
-                           (<tr
-                              key={customer._id}
-                              className="border-t border-stone-100 transition hover:bg-stone-50/70"
-                           >
-                              <td className="px-5 py-4 font-semibold text-stone-800">
-                                 {customer.name}
-                              </td>
+                           return (
+                              <tr
+                                 key={customer._id}
+                                 className="border-t border-stone-100 transition hover:bg-stone-50/70">                           >
+                                 <td className="px-5 py-4 font-semibold text-stone-800">
+                                    {customer.name}
+                                 </td>
 
-                              <td className="px-5 py-4 text-stone-600">
-                                 {customer.email}
-                              </td>
+                                 <td className="px-5 py-4 text-stone-600">
+                                    {customer.email}
+                                 </td>
 
-                              <td className="px-5 py-4 text-stone-600">
-                                 {customer.mobile}
-                              </td>
+                                 <td className="px-5 py-4 text-stone-600">
+                                    {customer.mobile}
+                                 </td>
 
-                              <td className="px-5 py-4 text-stone-700">
-                                 {orders.length}
-                              </td>
-                              {/* <td className="px-5 py-4">
+                                 <td className="px-5 py-4 text-stone-700">
+                                    {orders.length}
+                                 </td>
+                                 {/* <td className="px-5 py-4">
                                  <div className="flex items-center gap-3">
                                     <button
                                        type="button"
@@ -154,8 +154,8 @@ const Customers = () => {
                                     </button>
                                  </div>
                               </td> */}
-                           </tr>
-                        )})}
+                              </tr>)
+                        })}
                      </tbody>
                   </table>
                </div>
