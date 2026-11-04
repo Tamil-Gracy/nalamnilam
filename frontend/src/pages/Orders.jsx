@@ -120,7 +120,7 @@ const Orders = () => {
                     const quantity = Number(item.quantity) || 0;
                     const price = Number(item.price ?? product.price) || 0;
 
-                      const imageUrl = item.image;
+                      const imageUrl = item.productId?.image;
 
                     return (
                       <div

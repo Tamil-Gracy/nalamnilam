@@ -195,24 +195,9 @@ const Header = () => {
                         Shop
                         <i className="fa-solid fa-chevron-right"></i>
                      </Link>
-
-                     <Link to="/shop" onClick={() => setshowMobileNav(false)}
-                        className="font-medium text-[#24563B] rounded-lg px-3 py-2 flex justify-between items-center">
-                        Vegetables
-                        <i className="fa-solid fa-chevron-right"></i>
-                     </Link>
-
-                     <Link to="/shop" onClick={() => setshowMobileNav(false)}
-                        className="font-medium text-[#24563B] rounded-lg px-3 py-2 flex justify-between items-center">
-                        Fruits
-                        <i className="fa-solid fa-chevron-right"></i>
-                     </Link>
-
-                     <Link to="/shop" onClick={() => setshowMobileNav(false)}
-                        className="font-medium text-[#24563B] rounded-lg px-3 py-2 flex justify-between items-center">
-                        Millets
-                        <i className="fa-solid fa-chevron-right"></i>
-                     </Link>
+                     {categories.slice(0, 3).map((cat) => {
+                        return (<Link to={`/category/${cat._id}`} className="font-medium text-forest hover:text-forest">{cat.name}</Link>)
+                     })}
                      <Link to="/about" onClick={() => setshowMobileNav(false)}
                         className="font-medium text-[#24563B] rounded-lg px-3 py-2 flex justify-between items-center">
                         About
