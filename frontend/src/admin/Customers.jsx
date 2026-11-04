@@ -115,7 +115,7 @@ const Customers = () => {
                      <tbody>
                         {customers.map((customer) => {
                            const res = axios.get(`${API}/api/orders/user/${customer.firebaseUid}`);
-                           const orders = res.data.data;
+                           const orders = res.data?.data || [];
                            return (
                               <tr
                                  key={customer._id}
